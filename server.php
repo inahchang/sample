@@ -44,7 +44,7 @@
         }
         if(count($errors) == 0){
             $pass = md5($pass);
-            $query = "SELECT * FROM user wher username='$user' AND password='$pass'";
+            $query = "SELECT * FROM user WHERE username='$username' AND password='$pass'";
             $result = mysqli_query($db, $query);
             if(mysqli_num_rows($result) == 1){
                 $_SESSION['username'] = $username;

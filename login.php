@@ -18,7 +18,7 @@
                 <input type="password" id="pass" name="pass" />
             </p>            
             <p>
-                <input type="submit" id="btn" name="Login" />
+                <input type="submit" id="btn" name="login" />
             </p>
             <p>
                 Not yet a member <a href="register.php">sign up</a>
