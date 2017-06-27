@@ -9,6 +9,7 @@
     <div class="header">
         <h2>Register</h2>
     </div>
+    
     <form method="post" action="register.php">
         <?php include('errors.php'); ?>
         <div class="input-group">
@@ -30,9 +31,6 @@
         <div class="input-group">
             <button type="submit" name="register" class="btn">register</button>
         </div>
-        <p>
-            Already a member? <a href="login.php">sign in</a>
-        </p>
     </form>
 </body>
 </html>

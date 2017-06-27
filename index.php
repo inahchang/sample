@@ -1,5 +1,11 @@
-<?php include('server.php'); ?>
-DOCTYPE html>
+<?php
+    include('server.php'); 
+    if(empty($_SESSION['username'])){
+        header('location: login.php');
+    }
+?>
+
+<DOCTYPE html>
 <html>
 <head>
     <title>home page</title>
@@ -23,6 +29,9 @@ DOCTYPE html>
         <?php if (isset($_SESSION["username"])): ?>
             <p>Welcome <strong><?php echo $_SESSION['username']; ?></strong></p>
             <p><a href="index.php?logout='1'" style="color: red;">logout</p>
+        <?php endif ?>
+        <?php if ($_SESSION["username"] == 'admin'): ?>
+            <p><a href="admin.php">manage</p>
         <?php endif ?>
     </div>
 </body>
