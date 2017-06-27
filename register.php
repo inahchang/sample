@@ -1,3 +1,4 @@
+<?php include('server.php'); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +9,8 @@
     <div class="header">
         <h2>Register</h2>
     </div>
-    <form method="post" action="register">
+    <form method="post" action="register.php">
+        <?php include('errors.php'); ?>
         <div class="input-group">
             <label>Username</label>
             <input type="text" name="user">
@@ -24,10 +26,6 @@
         <div class="input-group">
             <label>Confirm password</label>
             <input type="text" name="pass2">
-        </div>
-        <div class="input-group">
-            <label>Email</label>
-            <input type="text" name="email">
         </div>
         <div class="input-group">
             <button type="submit" name="register" class="btn">register</button>

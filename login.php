@@ -1,3 +1,4 @@
+<?php include('server.php'); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,7 +7,8 @@
 </head>
 <body>
     <div id="frm">
-        <form action="process.php" method="POST">
+        <form action="login.php" method="POST">
+            <?php include('errors.php'); ?>
             <p>
                 <label>Username:</label>
                 <input type="text" id="user" name="user" />
