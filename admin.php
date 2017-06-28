@@ -28,13 +28,8 @@
             4. <a href="movie_schedule.php">movie schedule</a>
         </p>
         <p>
-            5. <a href="seat.php">seat</a>
+            5. <a href="index.php">back to main</a>
         </p>
-        <p>
-            6. <a href="review.php">review</a>
-        </p>
-        <p>
-            7. <a href="index.php">back to main</a>
     </div>
 </body>
 </html>

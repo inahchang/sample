@@ -23,12 +23,16 @@
                     $result = mysqli_query($db, $query);
                 ?>
                 <?php foreach ($result as $r): ?>
-                <p><?php echo $r['movie_title']; ?></p>
+                <p><?php echo $r['movie_title'], $r['type'];?></p>
                 <?php endforeach ?>
             </div>
             <p>
-                <label>delete:</label>
+                <label>delete(movie):</label>
                 <input type="text" id="user" name="movie" />
+            </p>
+            <p>
+            <label>delete(type):</label>
+                <input type="text" id="user" name="type" />
             </p>
             <p>
                 <input type="submit" id="btn" name="movie_delete" />
