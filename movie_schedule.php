@@ -15,7 +15,7 @@
         <form action="movie_schedule.php" method="POST">
             <?php include('errors.php'); ?>
             <div>
-                List all movie movie schedule.
+                List all movie schedule.
             </div>
             <div>
                 <?php

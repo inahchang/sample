@@ -4,6 +4,7 @@
     $username = "";
     $email = "";
     $errors = array();
+    $print = array();
     $db = mysqli_connect(getenv('IP'), getenv('C9_USER'), '', 'c9');
     
     if(isset($_POST['register'])){
@@ -293,7 +294,7 @@
         else{
             array_push($errors, "invalid theater");
         }
-        $query = "SELECT * FROM movie_schedule where idmovie='$midmovie' AND idtheater='$idtheater' AND show_time='$show_time'";
+        $query = "SELECT * FROM movie_schedule where idmovie='$idmovie' AND idtheater='$idtheater' AND show_time='$show_time'";
         $result = mysqli_query($db, $query);
         if(mysqli_num_rows($result) != 0){
             array_push($errors, "Try another time");
@@ -315,7 +316,261 @@
             $sql = "INSERT INTO movie_schedule (idmovie_schedule, idtheater, show_time, idmovie) VALUES ('$c', '$idtheater', '$show_time', '$idmovie')";
             mysqli_query($db, $sql);
         }
-    }    
+    }   
+    if(isset($_POST['movie_list'])){
+        $movie = ($_POST['movie']);
+        $type = ($_POST['type']);
+        if(empty($movie)){
+            array_push($errors, "Movie title is required");
+        }
+        if(empty($type)){
+            array_push($errors, "Type is required");
+        }
+        $query = "SELECT * FROM movie where movie_title='$movie' AND type='$type'";
+        $result = mysqli_query($db, $query);
+        if(mysqli_num_rows($result) == 0){
+            array_push($errors, "Invalid movie");
+        }
+        if(count($errors) == 0){
+            foreach ($result as $r){
+                $idmovie = $r['idmovie'];
+                $casting = $r['casting'];
+                $director = $r['director'];
+                $query = "SELECT * FROM movie INNER JOIN review on movie.idmovie = review.idmovie where movie.idmovie = '$idmovie'";
+                $star = mysqli_query($db, $query);
+                if(mysqli_num_rows($star) != 0){
+                    $count = 0;
+                    $avg_star = 0;
+                    foreach($star as $s){
+                        $avg_star = $avg_star + $s['stars'];
+                        $count = $count + 1;
+                    }
+                    $avg_star = $avg_star / $count;
+                }
+                else{
+                    $avg_star = "No review";
+                }
+                print "movie title: ".$movie."  ";
+                print "movie type: ".$type."    ";
+                print "director: ".$director."  ";
+                print "casting: ".$casting."    ";
+                print "average star: ".$avg_star."  ";
+            }
+        }
+    } 
+    if(isset($_POST['movie_review'])){
+        $movie = ($_POST['movie']);
+        $type = ($_POST['type']);
+        if(empty($movie)){
+            array_push($errors, "Movie title is required");
+        }
+        if(empty($type)){
+            array_push($errors, "Type is required");
+        }
+        $query = "SELECT * FROM movie where movie_title='$movie' AND type='$type'";
+        $result = mysqli_query($db, $query);
+        if(mysqli_num_rows($result) == 0){
+            array_push($errors, "Invalid movie");
+        }
+        if(count($errors) == 0){
+            foreach ($result as $r){
+                $idmovie = $r['idmovie'];
+                $query = "SELECT * FROM movie INNER JOIN review on movie.idmovie = review.idmovie where movie.idmovie = '$idmovie'";
+                $rev = mysqli_query($db, $query);
+                if(mysqli_num_rows($rev) == 0){
+                    array_push($print, "No review");
+                }     
+                else{
+                    foreach ($rev as $rev1){
+                        array_push($print, $rev1['review']);
+                    }
+                }
+            }
+        }
+    }
+    if(isset($_POST['write_review'])){
+        $movie = ($_POST['movie']);
+        $type = ($_POST['type']);
+        $review = ($_POST['review']);
+        $stars = ($_POST['stars']);
+        if(empty($movie)){
+            array_push($errors, "Movie title is required");
+        }
+        if(empty($type)){
+            array_push($errors, "Type is required");
+        }
+        if(empty($review)){
+            array_push($errors, "review is required");
+        }
+        if(empty($stars)){
+            array_push($errors, "Star is required");
+        }
+        $query = "SELECT * FROM movie where movie_title='$movie' AND type='$type'";
+        $result = mysqli_query($db, $query);
+        if(mysqli_num_rows($result) == 0){
+            array_push($errors, "Invalid movie");
+        }
+        else{
+            foreach($result as $r){
+                $idmovie = $r['idmovie'];
+            }
+        }
+        $username = $_SESSIION['username'];
+        $query = "SELECT * FROM user where username='$username'";
+        $result = mysqli_query($db, $query);
+        foreach($result as $r){
+            $iduser = $r['iduser'];
+        }
+        $query = "SELECT * FROM review where idmovie='$idmovie' AND iduser='$iduser'";
+        $result = mysqli_query($db, $query);
+        if(mysqli_num_rows($result) != 0){
+            array_push($errors, "You already wrote review on this movie");
+        }        
+        if(count($errors) == 0){
+            $query = "SELECT idreview FROM review";
+            $result = mysqli_query($db, $query);
+            $c = mysqli_num_rows($result);
+            while(1){
+                $query = "SELECT idreview FROM review where idreview='$c'";
+                $result = mysqli_query($db, $query);
+                if(mysqli_num_rows($result) != 0){
+                    $c = $c + 1;
+                }
+                else{
+                    break;
+                }
+            }
+            $sql = "INSERT INTO review (idreview, idmovie, iduser, review, stars) VALUES ('$c', '$idreview', '$iduser', '$review', '$stars')";
+            mysqli_query($db, $sql);
+        }
+    }
+    if(isset($_POST['delete_review'])){
+        $movie = ($_POST['movie']);
+        $type = ($_POST['type']);
+        if(empty($movie)){
+            array_push($errors, "Movie title is required");
+        }
+        if(empty($type)){
+            array_push($errors, "Type is required");
+        }
+        $query = "SELECT * FROM movie where movie_title='$movie' AND type='$type'";
+        $result = mysqli_query($db, $query);
+        if(mysqli_num_rows($result) == 0){
+            array_push($errors, "Invalid movie");
+        }
+        else{
+            foreach($result as $r){
+                $idmovie = $r['idmovie'];
+            }
+        }
+        $username = $_SESSIION['username'];
+        $query = "SELECT * FROM user where username='$username'";
+        $result = mysqli_query($db, $query);
+        foreach($result as $r){
+            $iduser = $r['iduser'];
+        }
+        $query = "SELECT * FROM review where idmovie='$idmovie' AND iduser='$iduser'";
+        $result = mysqli_query($db, $query);
+        if(mysqli_num_rows($result) == 0){
+            array_push($errors, "invalid review");
+        }        
+        if(count($errors) == 0){
+            $sql = "DELETE FROM review where iduser='$iduser' AND idmovie='$idmovie'";
+            mysqli_query($db, $sql);
+        }
+    }
+    if(isset($_POST['reservation'])){
+        $idmovie_schedule = ($_POST['idmovie_schedule']);
+        $how_many = ($_POST['how_many']);
+        if(empty($idmovie_schedule)){
+            array_push($errors, "Id movie schedule is required");
+        }
+        if(empty($how_many)){
+            array_push($errors, "How many tickets do you want?");
+        }
+        $query = "SELECT * FROM movie_schedule where idmovie_schedule='$idmovie_schedule'";
+        $result = mysqli_query($db, $query);
+        if(mysqli_num_rows($result) == 0){
+            array_push($errors, "Invalid movie schedule");
+        }
+        $username = $_SESSIION['username'];
+        $query = "SELECT * FROM user where username='$username'";
+        $result = mysqli_query($db, $query);
+        foreach($result as $r){
+            $iduser = $r['iduser'];
+        }
+        $query = "SELECT * FROM reservation where idmovie_schedule='$idmovie_schedule' AND iduser='$iduser'";
+        $result = mysqli_query($db, $query);
+        if(mysqli_num_rows($result) != 0){
+            array_push($errors, "You already made a reservation on this movie");
+        }        
+        if(count($errors) == 0){
+            $query = "SELECT idreservation FROM reservation";
+            $result = mysqli_query($db, $query);
+            $c = mysqli_num_rows($result);
+            while(1){
+                $query = "SELECT idreservation FROM reservation where idreservation='$c'";
+                $result = mysqli_query($db, $query);
+                if(mysqli_num_rows($result) != 0){
+                    $c = $c + 1;
+                }
+                else{
+                    break;
+                }
+            }
+            $sql = "INSERT INTO reservation (idreservation, idmovie_schedule, iduser, how_many) VALUES ('$c', '$idmovie_schedule', '$iduser', '$how_many')";
+            mysqli_query($db, $sql);
+        }
+    }
+    if(isset($_POST['cancel'])){
+        $idreservation = ($_POST['idreservation']);
+        if(empty($idreservation)){
+            array_push($errors, "reservation number is required");
+        }
+        $query = "SELECT * FROM reservation where idreservation='idreservation'";
+        $result = mysqli_query($db, $query);
+        if(mysqli_num_rows($result) == 0){
+            array_push($errors, "Invalid reservation number");
+        }
+        else{
+            foreach($result as $r){
+                $Iduser = $r['Iduser'];
+            }
+        }
+        $username = $_SESSIION['username'];
+        $query = "SELECT * FROM user where username='$username'";
+        $result = mysqli_query($db, $query);
+        foreach($result as $r){
+            $iduser = $r['iduser'];
+        }
+        if($iduser != $Iduser){
+            array_push($errors, "You are not the one who reserve this movie");
+        }
+        else{
+            $query = "SELECT * FROM cancellation INNER JOIN reservation on cancellation.idreservation = reservation.idreservation";
+            $result = mysqli_query($db, $query);
+            if(mysqli_num_rows($result) != 0){
+                array_push($errors, "Already cancelled");
+            }
+        }
+        if(count($errors) == 0){
+            $query = "SELECT idcancellation FROM cancellation";
+            $result = mysqli_query($db, $query);
+            $c = mysqli_num_rows($result);
+            while(1){
+                $query = "SELECT idcancellation FROM cancellation where idcancellation='$c'";
+                $result = mysqli_query($db, $query);
+                if(mysqli_num_rows($result) != 0){
+                    $c = $c + 1;
+                }
+                else{
+                    break;
+                }
+            }
+            $sql = "INSERT INTO cancellation (idcancellation, idreservation) VALUES ('$c', '$idreservation')";
+            mysqli_query($db, $sql);
+        }
+    }
     if(isset($_GET['logout'])){
         session_destroy();
         unset($_SESSION['username']);

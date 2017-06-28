@@ -33,6 +33,11 @@
         <?php if ($_SESSION["username"] == 'admin'): ?>
             <p><a href="admin.php">manage</p>
         <?php endif ?>
+        <?php if ($_SESSION["username"] != 'admin'): ?>
+            <p>1. <a href="movielist.php">movie information</p>
+            <p>2. <a href="review.php">movie review</p>
+            <p>3. <a href="reserve.php">reservation</p>
+        <?php endif ?>
     </div>
 </body>
 </html>
