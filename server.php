@@ -1,12 +1,10 @@
 <?php
     session_start();
-    
     $username = "";
     $email = "";
     $errors = array();
     $print = array();
     $db = mysqli_connect(getenv('IP'), getenv('C9_USER'), '', 'c9');
-    
     if(isset($_POST['register'])){
         $username = ($_POST['user']);
         $email = ($_POST['email']);
@@ -28,7 +26,7 @@
             $password = md5($pass1);
             $query = "SELECT iduser FROM user";
             $result = mysqli_query($db, $query);
-            $c = mysqli_num_rows($result);
+            $c = 1;
             while(1){
                 $query = "SELECT iduser FROM user where iduser='$c'";
                 $result = mysqli_query($db, $query);
@@ -39,7 +37,14 @@
                     break;
                 }
             }
+            mysqli_query($db, "START TRANSACTION");
             $sql = "INSERT INTO user (username, email, password, iduser) VALUES ('$username', '$email', '$password', '$c')";
+            if ($dbconnect_error){
+	            mysqli_query($db, "ROLLBACK");
+            }
+            else{
+	            mysqli_query($db, "COMMIT");
+            }
             mysqli_query($db, $sql);
             $_SESSION['username'] = $username;
             $_SESSION['success'] = "Logged in";
@@ -126,7 +131,7 @@
         if(count($errors) == 0){
             $query = "SELECT idtheater FROM theater";
             $result = mysqli_query($db, $query);
-            $c = mysqli_num_rows($result);
+            $c = 1;
             while(1){
                 $query = "SELECT idtheater FROM theater where idtheater='$c'";
                 $result = mysqli_query($db, $query);
@@ -192,7 +197,7 @@
         if(count($errors) == 0){
             $query = "SELECT idmovie FROM movie";
             $result = mysqli_query($db, $query);
-            $c = mysqli_num_rows($result);
+            $c = 1;
             while(1){
                 $query = "SELECT idmovie FROM movie where idmovie='$c'";
                 $result = mysqli_query($db, $query);
@@ -302,7 +307,7 @@
         if(count($errors) == 0){
             $query = "SELECT idmovie_schedule FROM movie_schedule";
             $result = mysqli_query($db, $query);
-            $c = mysqli_num_rows($result);
+            $c = 1;
             while(1){
                 $query = "SELECT idmovie_schedule FROM movie_schedule where idmovie_schedule='$c'";
                 $result = mysqli_query($db, $query);
@@ -350,11 +355,11 @@
                 else{
                     $avg_star = "No review";
                 }
-                print "movie title: ".$movie."  ";
-                print "movie type: ".$type."    ";
-                print "director: ".$director."  ";
-                print "casting: ".$casting."    ";
-                print "average star: ".$avg_star."  ";
+                array_push($print ,"movie title: ".$movie."  ");
+                array_push($print ,"movie type: ".$type."    ");
+                array_push($print ,"director: ".$director."  ");
+                array_push($print ,"casting: ".$casting."    ");
+                array_push($print ,"average star: ".$avg_star."  ");
             }
         }
     } 
@@ -429,7 +434,7 @@
         if(count($errors) == 0){
             $query = "SELECT idreview FROM review";
             $result = mysqli_query($db, $query);
-            $c = mysqli_num_rows($result);
+            $c = 1;
             while(1){
                 $query = "SELECT idreview FROM review where idreview='$c'";
                 $result = mysqli_query($db, $query);
@@ -507,7 +512,7 @@
         if(count($errors) == 0){
             $query = "SELECT idreservation FROM reservation";
             $result = mysqli_query($db, $query);
-            $c = mysqli_num_rows($result);
+            $c = 1;
             while(1){
                 $query = "SELECT idreservation FROM reservation where idreservation='$c'";
                 $result = mysqli_query($db, $query);
@@ -556,7 +561,7 @@
         if(count($errors) == 0){
             $query = "SELECT idcancellation FROM cancellation";
             $result = mysqli_query($db, $query);
-            $c = mysqli_num_rows($result);
+            $c = 1;
             while(1){
                 $query = "SELECT idcancellation FROM cancellation where idcancellation='$c'";
                 $result = mysqli_query($db, $query);

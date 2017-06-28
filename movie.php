@@ -23,7 +23,7 @@
                     $result = mysqli_query($db, $query);
                 ?>
                 <?php foreach ($result as $r): ?>
-                <p><?php echo $r['movie_title'], $r['type'];?></p>
+                <p><?php echo $r['movie_title']." ". $r['type'];?></p>
                 <?php endforeach ?>
             </div>
             <p>

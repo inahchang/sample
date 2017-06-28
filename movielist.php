@@ -37,6 +37,7 @@
             <p>
                 <input type="submit" id="btn" name="movie_list" />
             </p>
+            <?php include('print.php') ?>
             <p><a href="index.php">back to mainpage</p>
         </form>
     </body>
